@@ -1,19 +1,34 @@
-// import { useEffect, useState } from "react";
-// import { useNavigate } from "react-router";
+// src/pages/zen-pacific-orlando-page/page.tsx
+import type React from 'react';
+import type { JSX } from 'react';
 
-// import { ChevronLeft, ChevronRight, Heart } from "lucide-react";
-
-// import { SearchBar } from "../../components/SearchBar";
-// import { FullScreenLoading } from "../../components/FullScreenLoading";
-// import { PokemonCard } from "../../components/PokemonCard";
-// import { usePokemonsPaginated } from "../../hooks/usePokemonsPaginated";
-// import type { BasicPokemon } from "../../types/basic-pokemon.interface";
-
-
-// Quick Action definitions
 interface QuickAction {
   title: string;
-  icon: React.ReactNode;
+  icon: JSX.Element;
+}
+
+interface ServiceCard {
+  imgSrc: string;
+  title: string;
+  text: string;
+  primaryLabel: string;
+  secondaryLabel: string;
+}
+
+interface Conversation {
+  id: number;
+  avatar: string;
+  name: string;
+  time: string;
+  userQuery: string;
+  title: string;
+  text: string;
+  listItems?: string[];
+  tableData?: { area: string; hours: string; notes: string }[];
+}
+
+interface SuggestionChip {
+  label: string;
 }
 
 const quickActions: QuickAction[] = [
@@ -30,11 +45,11 @@ const quickActions: QuickAction[] = [
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        <title>Quick action icon</title>
+        <title>Check-in</title>
         <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
         <path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
       </svg>
-    ),
+    )
   },
   {
     title: 'Add Services',
@@ -49,10 +64,10 @@ const quickActions: QuickAction[] = [
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        <title>Quick action icon</title>
+        <title>Add Services</title>
         <path d="M3 3h18v18H3zM12 8v8m-4-4h8" />
       </svg>
-    ),
+    )
   },
   {
     title: 'Directions',
@@ -67,11 +82,11 @@ const quickActions: QuickAction[] = [
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        <title>Quick action icon</title>
+        <title>Directions</title>
         <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
         <circle cx={12} cy={10} r={3} />
       </svg>
-    ),
+    )
   },
   {
     title: 'Modify Dates',
@@ -86,13 +101,13 @@ const quickActions: QuickAction[] = [
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        <title>Quick action icon</title>
+        <title>Modify Dates</title>
         <rect x={3} y={4} width={18} height={18} rx={2} ry={2} />
         <line x1={16} y1={2} x2={16} y2={6} />
         <line x1={8} y1={2} x2={8} y2={6} />
         <line x1={3} y1={10} x2={21} y2={10} />
       </svg>
-    ),
+    )
   },
   {
     title: 'Guest Info',
@@ -107,80 +122,103 @@ const quickActions: QuickAction[] = [
         strokeLinecap="round"
         strokeLinejoin="round"
       >
-        <title>Quick action icon</title>
+        <title>Guest Info</title>
         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
         <circle cx={12} cy={7} r={4} />
       </svg>
-    ),
-  },
+    )
+  }
 ];
-
-// Service Card definitions
-interface ServiceCard {
-  title: string;
-  text: string;
-  imageUrl: string;
-  primaryLabel: string;
-  secondaryLabel: string;
-}
 
 const serviceCards: ServiceCard[] = [
   {
+    imgSrc: 'https://placehold.co/400x200?text=Spa+Treatment',
     title: 'Spa Treatment',
     text: 'Recommended for you: Based on your previous stays, you might enjoy our new Zen Relaxation Package.',
-    imageUrl: 'https://placehold.co/400x200?text=Spa+Treatment',
     primaryLabel: 'Book Now',
-    secondaryLabel: 'Learn More',
+    secondaryLabel: 'Learn More'
   },
   {
+    imgSrc: 'https://placehold.co/400x200?text=Room+Upgrade',
     title: 'Room Upgrade Available',
     text: 'Upgrade to our Executive Ocean Suite for only $75 more per night. Includes private balcony and premium amenities.',
-    imageUrl: 'https://placehold.co/400x200?text=Room+Upgrade',
     primaryLabel: 'Upgrade',
-    secondaryLabel: 'View Details',
+    secondaryLabel: 'View Details'
   },
   {
+    imgSrc: 'https://placehold.co/400x200?text=Dining+Options',
     title: 'Dining Reservations',
     text: 'Secure your table at our acclaimed Ocean View Restaurant. Special menu available during your stay.',
-    imageUrl: 'https://placehold.co/400x200?text=Dining+Options',
     primaryLabel: 'Reserve',
-    secondaryLabel: 'See Menu',
+    secondaryLabel: 'See Menu'
+  }
+];
+
+const conversationHistory: Conversation[] = [
+  {
+    id: 1,
+    avatar: 'https://placehold.co/20x20?text=ZP',
+    name: 'Zen Pacific Concierge',
+    time: 'Today, 2:17 PM',
+    userQuery: 'Do you have any kid-friendly activities during our stay?',
+    title: 'Kids Activities During Your Stay',
+    text: 'We have several activities perfect for children during your stay dates (May 15-20):',
+    listItems: [
+      'Kids Club (ages 4-12): Daily from 9AM-4PM',
+      'Pool Games: Every afternoon at 2PM',
+      'Movie Night: May 16 & 18 at 7PM',
+      'Sea Turtle Workshop: May 17 at 10AM'
+    ]
   },
+  {
+    id: 2,
+    avatar: 'https://placehold.co/20x20?text=ZP',
+    name: 'Zen Pacific Concierge',
+    time: 'Just now',
+    userQuery: 'When is your pool open',
+    title: 'Pool Hours & Information',
+    text: 'During your stay (May 15-20), our pools will be operating on the following schedule:',
+    tableData: [
+      { area: 'Main Resort Pool', hours: '7:00 AM - 10:00 PM', notes: 'Heated to 82°F' },
+      { area: 'Adult Infinity Pool', hours: '8:00 AM - 9:00 PM', notes: 'Ages 18+ only' },
+      { area: 'Children\'s Splash Pad', hours: '9:00 AM - 7:00 PM', notes: 'Supervised activities 2-4 PM' },
+      { area: 'Indoor Pool & Spa', hours: '6:00 AM - 11:00 PM', notes: 'Located in wellness center' }
+    ]
+  }
 ];
 
-// Suggestion chip labels
-const suggestionChips: string[] = [
-  'Pool dining options?',
-  'Special pool events?',
-  'Cabana pricing?',
+const suggestionChips: SuggestionChip[] = [
+  { label: 'Pool dining options?' },
+  { label: 'Special pool events?' },
+  { label: 'Cabana pricing?' }
 ];
 
-// QuickAction component
-const QuickActionComponent: React.FC<{ action: QuickAction }> = ({ action }) => (
+const QuickActionComponent: React.FC<QuickAction> = ({ icon, title }) => (
   <div className="quick-action">
-    {action.icon}
-    <span className="quick-action-title">{action.title}</span>
+    {icon}
+    <span className="quick-action-title">{title}</span>
   </div>
 );
 
-// Service Card component
-const ServiceCardComponent: React.FC<{ card: ServiceCard }> = ({ card }) => (
+const ServiceCardComponent: React.FC<ServiceCard> = ({
+  imgSrc,
+  title,
+  text,
+  primaryLabel,
+  secondaryLabel
+}) => (
   <div className="card">
-    <div
-      className="card-img"
-      style={{ backgroundImage: `url(${card.imageUrl})` }}
-    />
+    <div className="card-img" style={{ backgroundImage: `url('${imgSrc}')` }} />
     <div className="card-content">
-      <h3 className="card-title">{card.title}</h3>
-      <p className="card-text">{card.text}</p>
+      <h3 className="card-title">{title}</h3>
+      <p className="card-text">{text}</p>
       <div className="card-actions">
-        <button type="button" className="btn btn-primary">{card.primaryLabel}</button>
-        <button type="button" className="btn btn-secondary">{card.secondaryLabel}</button>
+        <button type='button' className="btn btn-primary">{primaryLabel}</button>
+        <button type='button' className="btn btn-secondary">{secondaryLabel}</button>
       </div>
     </div>
   </div>
 );
-
 
 const ResponseCardComponent: React.FC<Conversation> = ({
   avatar,
@@ -209,6 +247,7 @@ const ResponseCardComponent: React.FC<Conversation> = ({
       {listItems && (
         <ul style={{ marginBottom: '15px', paddingLeft: '20px' }}>
           {listItems.map((item, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
             <li key={i}>{item}</li>
           ))}
         </ul>
@@ -224,6 +263,7 @@ const ResponseCardComponent: React.FC<Conversation> = ({
           </thead>
           <tbody>
             {tableData.map((row, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
               <tr key={i}>
                 <td>{row.area}</td>
                 <td>{row.hours}</td>
@@ -237,94 +277,65 @@ const ResponseCardComponent: React.FC<Conversation> = ({
   </div>
 );
 
-
-interface SuggestionChip {
-  label: string;
-}
-
-const suggestionChips2: SuggestionChip[] = [
-  { label: 'Pool dining options?' },
-  { label: 'Special pool events?' },
-  { label: 'Cabana pricing?' }
-];
-
-const SuggestionChipComponent = ({ label }: SuggestionChip) => (
-  <button type="button" className="suggestion-chip">{label}</button>
+const SuggestionChipComponent: React.FC<SuggestionChip> = ({ label }) => (
+  <button type='button' className="suggestion-chip">{label}</button>
 );
 
-export const ZenPacificOrlandoPage = () => {
-	// const navigate = useNavigate();
-
-	// const { pokemons, totalPages, currentPage, isLoading, onPrefetchNextPage } =
-	// 	usePokemonsPaginated();
-
-	// const [favorites, setFavorites] = useState<number[]>(() => {
-	// 	const saved = localStorage.getItem("favorites");
-	// 	return saved ? JSON.parse(saved) : [];
-	// });
-
-	// const [showFavorites, setShowFavorites] = useState(false);
-
-	// useEffect(() => {
-	// 	localStorage.setItem("favorites", JSON.stringify(favorites));
-	// }, [favorites]);
-
-	// const toggleFavorite = (pokemonId: number) => {
-	// 	setFavorites((prev) =>
-	// 		prev.includes(pokemonId)
-	// 			? prev.filter((id) => id !== pokemonId)
-	// 			: [...prev, pokemonId],
-	// 	);
-	// };
-
-	// const displayedPokemons = showFavorites
-	// 	? pokemons.filter((pokemon: { id: number }) =>
-	// 			favorites.includes(pokemon.id),
-	// 		)
-	// 	: pokemons;
-
-	return (
-		<>
-			ZenPacificOrlandoPage
-			{/* Static content */}
-			<section className="static-content">
-				<div className="container">
-					<h2 className="section-title">Quick Actions</h2>
-					<div className="quick-actions">
+export const ZenPacificOrlandoPage: React.FC = () => {
+  return (
+    <>
+      {/* Static content */}
+      <section className="static-content">
+        <div className="container">
+          <h2 className="section-title">Quick Actions</h2>
+          <div className="quick-actions">
             {quickActions.map((action) => (
-              <QuickActionComponent key={action.title} action={action} />
+              <QuickActionComponent
+                key={action.title}
+                title={action.title}
+                icon={action.icon}
+              />
             ))}
           </div>
 
-					<h2 className="section-title">Enhance Your Stay</h2>
-					<div className="cards-section">
+          <h2 className="section-title">Enhance Your Stay</h2>
+          <div className="cards-section">
             {serviceCards.map((card) => (
-              <ServiceCardComponent key={card.title} card={card} />
+              <ServiceCardComponent
+                key={card.title}
+                {...card}
+              />
             ))}
           </div>
-				</div>
-			</section>
-			{/* Conversation history */}
-			<section className="conversation-area">
+        </div>
+      </section>
+
+      {/* Conversation history */}
+      <section className="conversation-area">
         <div className="container">
           <div className="response-cards">
             {conversationHistory.map((conv) => (
               <ResponseCardComponent key={conv.id} {...conv} />
             ))}
           </div>
+          <div className="suggestion-chips">
+            {suggestionChips.map((chip) => (
+              <SuggestionChipComponent key={chip.label} {...chip} />
+            ))}
+          </div>
         </div>
       </section>
-			{/* Messaging input */}
-			<section className="messaging-container">
+
+      {/* Messaging input */}
+      <section className="messaging-container">
         <div className="container">
-          {/* Latest response card (static or dynamic) */}
           <div className="message-input-container">
             <input
               type="text"
               className="message-input"
               placeholder="Ask me anything about your stay..."
             />
-            <button type="button" className="send-button">
+            <button type='button' className="send-button">
               <svg
                 className="send-icon"
                 xmlns="http://www.w3.org/2000/svg"
@@ -335,19 +346,14 @@ export const ZenPacificOrlandoPage = () => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <title>send button icon</title>
+                <title>Send</title>
                 <line x1="22" y1="2" x2="11" y2="13" />
                 <polygon points="22 2 15 22 11 13 2 9 22 2" />
               </svg>
             </button>
           </div>
-          <div className="suggestion-chips">
-            {suggestionChips2.map((chip) => (
-              <SuggestionChipComponent key={chip.label} {...chip} />
-            ))}
-          </div>
         </div>
       </section>
-		</>
-	);
+    </>
+  );
 };
