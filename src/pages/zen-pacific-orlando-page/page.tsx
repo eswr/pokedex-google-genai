@@ -25,11 +25,13 @@ interface Conversation {
   text: string;
   listItems?: string[];
   tableData?: { area: string; hours: string; notes: string }[];
+  actions?: { label: string; variant: 'primary' | 'secondary' }[];
+  chips?: string[];
 }
 
-interface SuggestionChip {
-  label: string;
-}
+// interface SuggestionChip {
+//   label: string;
+// }
 
 const quickActions: QuickAction[] = [
   {
@@ -168,6 +170,10 @@ const conversationHistory: Conversation[] = [
       'Pool Games: Every afternoon at 2PM',
       'Movie Night: May 16 & 18 at 7PM',
       'Sea Turtle Workshop: May 17 at 10AM'
+    ],
+    actions: [
+      { label: 'Reserve Activities', variant: 'primary' },
+      { label: 'See Full Schedule', variant: 'secondary' }
     ]
   },
   {
@@ -183,15 +189,24 @@ const conversationHistory: Conversation[] = [
       { area: 'Adult Infinity Pool', hours: '8:00 AM - 9:00 PM', notes: 'Ages 18+ only' },
       { area: 'Children\'s Splash Pad', hours: '9:00 AM - 7:00 PM', notes: 'Supervised activities 2-4 PM' },
       { area: 'Indoor Pool & Spa', hours: '6:00 AM - 11:00 PM', notes: 'Located in wellness center' }
+    ],
+    actions: [
+      { label: 'Reserve Cabana', variant: 'primary' },
+      { label: 'View Pool Map', variant: 'secondary' }
+    ],
+    chips: [
+      'Pool dining options?',
+      'Special pool events?',
+      'Cabana pricing?'
     ]
   }
 ];
 
-const suggestionChips: SuggestionChip[] = [
-  { label: 'Pool dining options?' },
-  { label: 'Special pool events?' },
-  { label: 'Cabana pricing?' }
-];
+// const suggestionChips: SuggestionChip[] = [
+//   { label: 'Pool dining options?' },
+//   { label: 'Special pool events?' },
+//   { label: 'Cabana pricing?' }
+// ];
 
 const QuickActionComponent: React.FC<QuickAction> = ({ icon, title }) => (
   <div className="quick-action">
@@ -201,11 +216,7 @@ const QuickActionComponent: React.FC<QuickAction> = ({ icon, title }) => (
 );
 
 const ServiceCardComponent: React.FC<ServiceCard> = ({
-  imgSrc,
-  title,
-  text,
-  primaryLabel,
-  secondaryLabel
+  imgSrc, title, text, primaryLabel, secondaryLabel
 }) => (
   <div className="card">
     <div className="card-img" style={{ backgroundImage: `url('${imgSrc}')` }} />
@@ -221,14 +232,8 @@ const ServiceCardComponent: React.FC<ServiceCard> = ({
 );
 
 const ResponseCardComponent: React.FC<Conversation> = ({
-  avatar,
-  name,
-  time,
-  userQuery,
-  title,
-  text,
-  listItems,
-  tableData
+  avatar, name, time, userQuery, title, text,
+  listItems, tableData, actions, chips
 }) => (
   <div className="response-card">
     <div className="response-header">
@@ -244,14 +249,14 @@ const ResponseCardComponent: React.FC<Conversation> = ({
       <div className="user-query">{userQuery}</div>
       <h3 className="card-title">{title}</h3>
       <p className="card-text">{text}</p>
+
       {listItems && (
         <ul style={{ marginBottom: '15px', paddingLeft: '20px' }}>
-          {listItems.map((item, i) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            <li key={i}>{item}</li>
-          ))}
+          {/* biome-ignore lint/suspicious/noArrayIndexKey: <explanation> */}
+          {listItems.map((item, i) => <li key={i}>{item}</li>)}
         </ul>
       )}
+
       {tableData && (
         <table className="pool-hours-table">
           <thead>
@@ -273,13 +278,37 @@ const ResponseCardComponent: React.FC<Conversation> = ({
           </tbody>
         </table>
       )}
+
+      {actions && (
+        <div className="card-actions" style={{ marginTop: '15px' }}>
+          {actions.map(({ label, variant }) => (
+            <button
+            type='button'
+              key={label}
+              className={`btn ${variant === 'primary' ? 'btn-primary' : 'btn-secondary'}`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {chips && (
+        <div className="suggestion-chips" style={{ marginTop: '15px' }}>
+          {chips.map((label) => (
+            <button type='button' key={label} className="suggestion-chip">
+              {label}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   </div>
 );
 
-const SuggestionChipComponent: React.FC<SuggestionChip> = ({ label }) => (
-  <button type='button' className="suggestion-chip">{label}</button>
-);
+// const SuggestionChipComponent: React.FC<SuggestionChip> = ({ label }) => (
+//   <button type='button' className="suggestion-chip">{label}</button>
+// );
 
 export const ZenPacificOrlandoPage: React.FC = () => {
   return (
@@ -318,11 +347,11 @@ export const ZenPacificOrlandoPage: React.FC = () => {
               <ResponseCardComponent key={conv.id} {...conv} />
             ))}
           </div>
-          <div className="suggestion-chips">
+          {/* <div className="suggestion-chips">
             {suggestionChips.map((chip) => (
               <SuggestionChipComponent key={chip.label} {...chip} />
             ))}
-          </div>
+          </div> */}
         </div>
       </section>
 

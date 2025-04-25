@@ -238,7 +238,8 @@ main {
 /* Response cards styles */
 .response-cards {
     display: flex;
-    flex-direction: column-reverse; /* Newest at bottom */
+    /* flex-direction: column-reverse;  */
+    flex-direction: column;
     gap: 20px;
     padding: 20px 0;
 }
